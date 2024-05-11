@@ -1,13 +1,15 @@
 package com.crud.app1.service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.crud.app1.model.Item;
 import com.crud.app1.repository.ItemRepository;
+
+import exceptionHandler.ItemNotFoundException;
 
 @Service
 public class ItemService {
@@ -20,9 +22,10 @@ public class ItemService {
 		return itemRepository.findAll();
 	}
 
-	public Optional<Item> findById(Long id) {
+	public Item findById(Long id) {
 
-		return itemRepository.findById(id);
+		return itemRepository.findById(id)
+				.orElseThrow(() -> new ItemNotFoundException("Item with ID " + id + " is not found."));
 
 	}
 
@@ -34,7 +37,11 @@ public class ItemService {
 
 	public void deleteById(Long id) {
 
-		itemRepository.deleteById(id);
+		try {
+			itemRepository.deleteById(id);
+		} catch (NoSuchElementException e) {
+			throw new ItemNotFoundException("Item with ID " + id + " is not found.");
+		}
 
 	}
 
