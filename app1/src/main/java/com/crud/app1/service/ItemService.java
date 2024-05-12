@@ -32,7 +32,7 @@ public class ItemService {
 			return itemRepository.findAll();
 
 		} catch (ItemIsEmpty e) {
-			logger.error("There are no Items in the list.", e);
+			logger.error("There are no Items in the list.");
 			throw new ItemIsEmpty("There are no Items in the list.");
 		}
 	}
@@ -46,7 +46,7 @@ public class ItemService {
 			logger.info("Fetching item with ID: {}", id);
 			return itemRepository.findById(id).get();
 		} catch (ItemNotFoundException e) {
-			logger.error("Error fetching item with ID: {} - Item not found", id, e);
+			logger.error("Error fetching item with ID: {} - Item not found", id);
 			throw new ItemNotFoundException("Item with ID " + id + " is not found.");
 		}
 
@@ -68,7 +68,7 @@ public class ItemService {
 			logger.info("Item with ID: {} successfully deleted", id);
 
 		} catch (EmptyResultDataAccessException e) { // Catch the specific exception
-			logger.error("Error deleting item with ID: {} - Item not found", id, e);
+			logger.error("Error deleting item with ID: {} - Item not found", id);
 			throw new ItemNotFoundException("Item with ID " + id + " is not found."); // Re-throw as
 																						// ItemNotFoundException
 		}
