@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.crud.app1.model.Item;
 
 @Repository
-public interface ItemRepository extends JpaRepository<Item, Long> {
+public interface ItemRepository extends JpaRepository <Item, Long> {
 
 }

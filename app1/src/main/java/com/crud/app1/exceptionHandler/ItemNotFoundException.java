@@ -1,4 +1,4 @@
-package exceptionHandler;
+package com.crud.app1.exceptionHandler;
 
 public class ItemNotFoundException extends RuntimeException {
 

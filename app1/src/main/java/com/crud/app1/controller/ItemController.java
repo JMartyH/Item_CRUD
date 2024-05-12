@@ -1,8 +1,9 @@
 package com.crud.app1.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.crud.app1.model.Item;
 import com.crud.app1.service.ItemService;
 
-import exceptionHandler.ItemErrorResponse;
-import exceptionHandler.ItemNotFoundException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
@@ -27,36 +26,33 @@ import jakarta.validation.constraints.Min;
 @RequestMapping("/items")
 public class ItemController {
 
+	private static final Logger logger = LoggerFactory.getLogger(ItemController.class);
+
 	@Autowired
 	ItemService itemService;
 
 	@GetMapping
-	public ResponseEntity<List<Item>> getAllItems() {
-
-		// TODO: add validation if there are no items in the list
+	public ResponseEntity<?> getAllItems() {
+		logger.info("GET request received for all items");
+		
 		List<Item> allItems = itemService.findAll();
-
 		return ResponseEntity.ok(allItems);
 
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getItemById(@Valid @PathVariable @Min(1) Long id) {
+		logger.info("GET request received for item with ID: {}", id);
 
-		try {
-			Item item = itemService.findById(id);
-			return ResponseEntity.ok(item);
-		} catch (ItemNotFoundException e) {
-			ItemErrorResponse errorResponse = new ItemErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(),
-					LocalDateTime.now());
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-		}
+		Item item = itemService.findById(id);
+		return ResponseEntity.ok(item);
 
 	}
 
 	@PostMapping
 	public ResponseEntity<Item> createItem(@Valid @RequestBody Item item) {
-
+		logger.info("POST request received to create item: {}", item);
+		System.out.println(item.getId());
 		Item savedItem = itemService.save(item);
 		return ResponseEntity.status(HttpStatus.CREATED).body(savedItem);
 
@@ -64,34 +60,21 @@ public class ItemController {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateItem(@PathVariable Long id, @RequestBody Item item) {
-
-		try {
-			Item itemToUpdate = itemService.findById(id);
-			itemToUpdate.setName(item.getName());
-			itemToUpdate.setDescription(item.getDescription());
-			itemService.save(itemToUpdate);
-			return ResponseEntity.ok(itemToUpdate);
-		} catch (ItemNotFoundException e) {
-			ItemErrorResponse errorResponse = new ItemErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(),
-					LocalDateTime.now());
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-		}
+		logger.info("PUT request received to update item with ID: {}", id);
+		
+		Item itemToUpdate = itemService.findById(id);
+		itemToUpdate.setName(item.getName());
+		itemToUpdate.setDescription(item.getDescription());
+		itemService.save(itemToUpdate);
+		return ResponseEntity.ok(itemToUpdate);
 
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteItemById(@PathVariable Long id) {
-
-		try {
-			itemService.findById(id);
-			itemService.deleteById(id);
-			return ResponseEntity.ok("Successfully deleted item " + id);
-
-		} catch (ItemNotFoundException e) {
-			ItemErrorResponse errorResponse = new ItemErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(),
-					LocalDateTime.now());
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-		}
+		logger.info("DELETE request received to delete ID: {}", id);
+		itemService.deleteById(id); // This might throw ItemNotFoundException, will be handled by GlobalExceptionHandler
+		return ResponseEntity.ok("Successfully deleted item " + id);
 
 	}
 }
