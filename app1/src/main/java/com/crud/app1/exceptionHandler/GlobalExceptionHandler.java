@@ -40,9 +40,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(apiError, apiError.getStatus());
 	}
 
-	// TODO: add exception for:
-	// -when creating a new item, id should be null
-
 	// General Exception Handling
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ApiError> handleGenericException(Exception ex) {
