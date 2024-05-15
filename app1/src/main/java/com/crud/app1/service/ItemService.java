@@ -5,7 +5,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.crud.app1.exceptionHandler.ItemIsEmpty;
@@ -23,55 +22,40 @@ public class ItemService {
 
 	public List<Item> findAll() {
 
-		try {
-
-			if (itemRepository.findAll().isEmpty()) {
-				throw new ItemIsEmpty("no items in the list");
-			}
-			logger.info("Fetched all items from the repository");
-			return itemRepository.findAll();
-
-		} catch (ItemIsEmpty e) {
-			logger.error("There are no Items in the list.");
-			throw new ItemIsEmpty("There are no Items in the list.");
+		logger.info("Fetching all items from the repository");
+		List<Item> items = itemRepository.findAll();
+		if (items.isEmpty()) {
+			throw new ItemIsEmpty("No items found in the repository.");
 		}
+		return items;
+
 	}
 
 	public Item findById(Long id) {
 
-		try {
-			if (!itemRepository.existsById(id)) {
-				throw new ItemNotFoundException("No such Id exists: " + id);
-			}
-			logger.info("Fetching item with ID: {}", id);
-			return itemRepository.findById(id).get();
-		} catch (ItemNotFoundException e) {
-			logger.error("Error fetching item with ID: {} - Item not found", id);
-			throw new ItemNotFoundException("Item with ID " + id + " is not found.");
-		}
+		logger.info("Fetching item with ID: {}", id);
+		return itemRepository.findById(id)
+				.orElseThrow(() -> new ItemNotFoundException("Item with ID " + id + " is not found."));
 
 	}
 
 	public Item save(Item item) {
-		logger.info("Saving item: \n" + item.toString());
+		logger.info("Saving item: \n {}", item);
 		return itemRepository.save(item);
 
 	}
 
-	public void deleteById(Long id) throws EmptyResultDataAccessException {
-		logger.info("Attempting to delete item with ID: {}", id);
-		try {
-			if (!itemRepository.existsById(id)) {
-				throw new EmptyResultDataAccessException(1);
-			}
-			itemRepository.deleteById(id);
-			logger.info("Item with ID: {} successfully deleted", id);
+	public void deleteById(Long id) {
 
-		} catch (EmptyResultDataAccessException e) { // Catch the specific exception
+		logger.info("Attempting to delete item with ID: {}", id);
+
+		if (!itemRepository.existsById(id)) { // If item not found, throw ItemNotFoundException
 			logger.error("Error deleting item with ID: {} - Item not found", id);
-			throw new ItemNotFoundException("Item with ID " + id + " is not found."); // Re-throw as
-																						// ItemNotFoundException
+			throw new ItemNotFoundException("Item with ID " + id + " is not found.");
 		}
+
+		itemRepository.deleteById(id);
+		logger.info("Item with ID: {} successfully deleted", id);
 
 	}
 
