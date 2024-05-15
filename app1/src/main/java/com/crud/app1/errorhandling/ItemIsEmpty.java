@@ -1,4 +1,4 @@
-package com.crud.app1.exceptionHandler;
+package com.crud.app1.errorhandling;
 
 public class ItemIsEmpty extends RuntimeException{
 

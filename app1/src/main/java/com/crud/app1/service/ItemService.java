@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.crud.app1.exceptionHandler.ItemIsEmpty;
-import com.crud.app1.exceptionHandler.ItemNotFoundException;
+import com.crud.app1.errorhandling.ItemIsEmpty;
+import com.crud.app1.errorhandling.ItemNotFoundException;
 import com.crud.app1.model.Item;
 import com.crud.app1.repository.ItemRepository;
 

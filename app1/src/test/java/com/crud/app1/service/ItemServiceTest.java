@@ -23,8 +23,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import com.crud.app1.exceptionHandler.ItemIsEmpty;
-import com.crud.app1.exceptionHandler.ItemNotFoundException;
+import com.crud.app1.errorhandling.ItemIsEmpty;
+import com.crud.app1.errorhandling.ItemNotFoundException;
 import com.crud.app1.model.Item;
 import com.crud.app1.repository.ItemRepository;
 
