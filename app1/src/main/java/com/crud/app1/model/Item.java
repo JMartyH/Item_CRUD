@@ -17,6 +17,30 @@ public class Item {
 	@NotBlank(message = "Description is required")
 	private String description;
 
+	// No-argument constructor
+	public Item() {
+	}
+
+	public Item(Long id, @NotBlank(message = "Name is required") String name,
+			@NotBlank(message = "Description is required") String description) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.description = description;
+	}
+
+	public Item(@NotBlank(message = "Name is required") String name,
+			@NotBlank(message = "Description is required") String description) {
+		super();
+		this.name = name;
+		this.description = description;
+	}
+
+	// Copy constructor (Optional)
+	public Item(Item other) {
+		this(other.id, other.name, other.description);
+	}
+
 	public Long getId() {
 		return id;
 	}
