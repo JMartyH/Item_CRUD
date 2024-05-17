@@ -2,6 +2,7 @@ package com.crud.app1.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
@@ -21,7 +22,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import com.crud.app1.errorhandling.ItemIsEmpty;
 import com.crud.app1.errorhandling.ItemNotFoundException;
 import com.crud.app1.model.Item;
 import com.crud.app1.repository.ItemRepository;
@@ -75,8 +75,14 @@ class ItemServiceTest {
 
 	@Test
 	void testFindAll_IsEmpty() {
-		when(itemRepository.findAll()).thenReturn(Collections.emptyList());
-		assertThrows(ItemIsEmpty.class, () -> itemService.findAll()); // Expect ItemIsEmpty
+	    // Arrange (mock empty list response)
+	    when(itemRepository.findAll()).thenReturn(Collections.emptyList());
+
+	    // Act (call the service method)
+	    List<Item> actualItems = itemService.findAll();
+
+	    // Assert (verify the result is an empty list)
+	    assertTrue(actualItems.isEmpty());
 	}
 
 	@Test
