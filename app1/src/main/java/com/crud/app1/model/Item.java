@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Item {
@@ -14,7 +15,7 @@ public class Item {
 	private Long id;
 	@NotBlank(message = "Name is required")
 	private String name;
-	@NotBlank(message = "Description is required")
+	@Size(min = 10, max = 200, message = "Description must be between 10 and 200 characters")
 	private String description;
 
 	// No-argument constructor
@@ -22,7 +23,7 @@ public class Item {
 	}
 
 	public Item(Long id, @NotBlank(message = "Name is required") String name,
-			@NotBlank(message = "Description is required") String description) {
+			@Size(min = 10, max = 200, message = "Description must be between 10 and 200 characters") String description) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -30,7 +31,7 @@ public class Item {
 	}
 
 	public Item(@NotBlank(message = "Name is required") String name,
-			@NotBlank(message = "Description is required") String description) {
+			@Size(min = 10, max = 200, message = "Description must be between 10 and 200 characters") String description) {
 		super();
 		this.name = name;
 		this.description = description;
